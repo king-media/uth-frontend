@@ -1,0 +1,14 @@
+{
+  "name": "uth-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run-server": "node ../uth-server/index.js"
+  },
+  "dependencies": {}
+}
