@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -21,6 +21,8 @@ import {
 import TodosPage from './pages/TodosPage'
 import CompletedTodosPage from './pages/CompletedTodosPage'
 
+import { mockFetch } from "../../shared/todosUtils";
+
 const routes = [
     {
         path: "/todos",
@@ -32,33 +34,60 @@ const routes = [
     }
 ]
 
-function RouteRenderer (route) {
+function RouteRenderer ({ route, todos, updateTodos }) {
     return (
         <Route
             path={route.path}
             render={props => (
                 // pass the sub-routes down to keep nesting
-                <route.component {...props} routes={route?.routes} />
+                <route.component {...props} todos={todos} updateTodos={updateTodos} routes={route?.routes} />
             )}
         />
     )
 }
 
 export default function TodoApp() {
+    const [todosList, setTodosList] = useState([])
+
+     useEffect( () => {
+         async function fetchData() {
+             const response = await mockFetch('localhost:3000/getTodos')
+
+             if (response.status === '200') {
+                 setTodosList(response.data)
+             }
+         }
+
+         fetchData()
+    },[])
+
     const routesRendererMap = routes.map(route => (
-        <RouteRenderer key={route.path} {...route} />
+        <RouteRenderer key={route.path} todos={ todosList } updateTodos={ updateTodosAction } route={ route } />
     ))
+
+
+    async function updateTodosAction(todos) {
+        const newTodos = [...todos]
+        const response = await mockFetch('localhost:3000/updateTodos', { todos: newTodos });
+        if (response.status === 200) {
+            setTodosList(response.data)
+        }
+    }
 
   return (
       <Router>
-        <nav>
-            <img src={logo} alt="React Logo" width={75}/>
-            <span>
-              <Link to="/todos">Todos</Link>
-            </span>
-            <span>
-              <Link to="/completed-todos">Completed Todos</Link>
-            </span>
+        <nav className="App-nav">
+            <img className="App-logo" src={logo} alt="React Logo" width={75}/>
+            <div className="nav-links-container">
+                <span>
+                    <Link to="/todos" className="App-link">Todos</Link>
+                </span>
+                <span>
+                    <Link to="/completed-todos" className="App-link">Completed Todos</Link>
+                </span>
+            </div>
+
+        </nav>
           {/*
           A <Switch> looks through all its children <Route>
           elements and renders the first one whose path
@@ -69,7 +98,6 @@ export default function TodoApp() {
           <Switch>
               { routesRendererMap }
           </Switch>
-        </nav>
       </Router>
   );
 }
