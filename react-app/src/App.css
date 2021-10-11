@@ -1,5 +1,5 @@
-.App {
-  text-align: center;
+body {
+  background: #fbf9f9;
 }
 
 .App-logo {
@@ -33,6 +33,52 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.todos-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.todos-page button {
+  margin: 5px;
+  padding: 5px 10px;
+  color: #61dafb;
+  background: white;
+  border: 2px solid #61dafb;
+  box-shadow: 5px 5px 5px -1px rgba(0, 0, 0, .5);
+  min-width: 150px;
+  transition: all ease-in-out 350ms;
+}
+
+.todos-page button:hover {
+  cursor: pointer;
+  font-weight: bold;
+  transform: scale(1.05);
+  box-shadow: 6px 6px 7px -1px rgba(0, 0, 0, .3);
+}
+
+.todos-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  max-width: 23rem;
+}
+
+.completed-todo {
+  color: gray;
+  text-decoration: line-through;
+}
+
+.search {
+  min-width: 350px;
+}
+
+input[type="checkbox"]:hover {
+  cursor: pointer;
 }
 
 @keyframes App-logo-spin {

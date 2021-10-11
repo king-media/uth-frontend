@@ -9,19 +9,10 @@ import {
   Link
 } from "react-router-dom";
 
-// This site has 3 pages, all of which are rendered
-// dynamically in the browser (not server rendered).
-//
-// Although the page does not ever refresh, notice how
-// React Router keeps the URL up to date as you navigate
-// through the site. This preserves the browser history,
-// making sure things like the back button and bookmarks
-// work properly.
-
 import TodosPage from './pages/TodosPage'
 import CompletedTodosPage from './pages/CompletedTodosPage'
 
-import { mockFetch } from "../../shared/todosUtils";
+import { mockFetch } from "../../shared/todosApi";
 
 const routes = [
     {
@@ -34,13 +25,15 @@ const routes = [
     }
 ]
 
-function RouteRenderer ({ route, todos, updateTodos }) {
+function RouteRenderer ({ path, component, ...props}) {
+    const route = { path, component }
     return (
         <Route
+            exact={route.path === '/todos'}
             path={route.path}
-            render={props => (
+            render={routerProps => (
                 // pass the sub-routes down to keep nesting
-                <route.component {...props} todos={todos} updateTodos={updateTodos} routes={route?.routes} />
+                <route.component {...routerProps} { ...props } />
             )}
         />
     )
@@ -48,30 +41,78 @@ function RouteRenderer ({ route, todos, updateTodos }) {
 
 export default function TodoApp() {
     const [todosList, setTodosList] = useState([])
+    const [fontSize, setFontSize] = useState(1)
+    const [completedState, setCompletedState] = useState([])
 
-     useEffect( () => {
-         async function fetchData() {
-             const response = await mockFetch('localhost:3000/getTodos')
-
-             if (response.status === '200') {
-                 setTodosList(response.data)
-             }
-         }
-
-         fetchData()
+    useEffect( () => {
+         fetchTodos()
     },[])
 
     const routesRendererMap = routes.map(route => (
-        <RouteRenderer key={route.path} todos={ todosList } updateTodos={ updateTodosAction } route={ route } />
+        <RouteRenderer {...route} key={route.path} todos={ todosList } fontSize={fontSize}
+                       completedState={completedState} handleTodoCompletion={handleTodoCompletion}
+                       updateTodos={ updateTodosAction } changeFontByType={ changeFontByType }
+                       sortTodos={ sortTodosAction }
+        />
     ))
 
+    function getCompletedState(todos) {
+        return todos.map(todo => todo.completed);
+    }
+
+    function handleApiResponse(response) {
+        if (response.status === '200') {
+            setTodosList(response.data)
+            setCompletedState(getCompletedState(response.data))
+        } else {
+            console.error(response.data)
+        }
+    }
+
+    async function fetchTodos() {
+        const response = await mockFetch('localhost:3000/getTodos')
+        handleApiResponse(response);
+    }
 
     async function updateTodosAction(todos) {
         const newTodos = [...todos]
         const response = await mockFetch('localhost:3000/updateTodos', { todos: newTodos });
-        if (response.status === 200) {
-            setTodosList(response.data)
-        }
+
+        handleApiResponse(response)
+    }
+
+     async function handleTodoCompletion(checkedIndex) {
+        const newTodos = todosList.map((todo, index) => {
+            if (checkedIndex === index) {
+                todo.completed = !todo.completed
+            }
+
+            return todo
+        })
+
+        await updateTodosAction(newTodos)
+    }
+
+    function sortTodosAction() {
+        const newTodos = [...todosList].sort((a, b) => {
+            const textA = a.text.toLowerCase()
+            const textB = b.text.toLowerCase()
+
+            if (textA < textB) {
+                return -1;
+            }
+            if (textA > textB) {
+                return 1;
+            }
+
+            return 0;
+        })
+
+        setTodosList(newTodos)
+    }
+
+    function changeFontByType(type) {
+        type && type === 'increment' ? setFontSize(fontSize + 1) : setFontSize(1)
     }
 
   return (

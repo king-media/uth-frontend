@@ -20,8 +20,8 @@ const rawTodoList = [
     },
 ]
 
-const promiseTimer = () => {
-    return new Promise((resolve) => _delay(resolve, 1500))
+const promiseTimer = (ms = 1500) => {
+    return new Promise((resolve) => _delay(resolve, ms))
 }
 
 const getTodosFromDatabase = async () => {
@@ -45,12 +45,10 @@ const getTodosFromDatabase = async () => {
 
 const updateTodosDatabase = async (todos) => {
     try {
-        const successfulUpdate = await _delay((updatedTodos) => {
-            localStorage.setItem('todosRecord', JSON.stringify(updatedTodos))
-            return true;
-        }, 1500, todos)
+        await promiseTimer(350)
+        localStorage.setItem('todosRecord', JSON.stringify(todos))
 
-        return successfulUpdate && Promise.resolve({ status: '200', data: todos})
+        return Promise.resolve({ status: '200', data: todos})
     } catch (err) {
         return Promise.reject({ status: '500', data: err })
     }
@@ -75,12 +73,9 @@ class ApiHandler {
     }
 }
 
-const getTodosRoute = new ApiHandler('/getTodos')
-const updateTodosRoute = new ApiHandler('/updateTodos')
-
 const apiHandlerStrategy = {
-    'localhost:3000/getTodos': getTodosRoute,
-    'localhost:3000/updateTodos': updateTodosRoute
+    'localhost:3000/getTodos': new ApiHandler('/getTodos'),
+    'localhost:3000/updateTodos': new ApiHandler('/updateTodos')
 };
 
 
