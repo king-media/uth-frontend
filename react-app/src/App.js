@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, createContext, useContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,6 +14,8 @@ import CompletedTodosPage from './pages/CompletedTodosPage'
 
 import { mockFetch } from "../../shared/todosApi";
 
+export const TodosStateContext = createContext({})
+
 const routes = [
     {
         path: "/todos",
@@ -25,15 +27,13 @@ const routes = [
     }
 ]
 
-function RouteRenderer ({ path, component, ...props}) {
-    const route = { path, component }
+function RouteRenderer (route) {
     return (
         <Route
-            exact={route.path === '/todos'}
             path={route.path}
-            render={routerProps => (
+            render={props => (
                 // pass the sub-routes down to keep nesting
-                <route.component {...routerProps} { ...props } />
+                <route.component {...props}  />
             )}
         />
     )
@@ -43,17 +43,22 @@ export default function TodoApp() {
     const [todosList, setTodosList] = useState([])
     const [fontSize, setFontSize] = useState(1)
     const [completedState, setCompletedState] = useState([])
+    const todosStateApi = {
+        todos: todosList,
+        fontSize,
+        completedState,
+        handleTodoCompletion,
+        changeFontByType,
+        updateTodos: updateTodosAction,
+        sortTodos: sortTodosAction
+    }
 
     useEffect( () => {
          fetchTodos()
     },[])
 
     const routesRendererMap = routes.map(route => (
-        <RouteRenderer {...route} key={route.path} todos={ todosList } fontSize={fontSize}
-                       completedState={completedState} handleTodoCompletion={handleTodoCompletion}
-                       updateTodos={ updateTodosAction } changeFontByType={ changeFontByType }
-                       sortTodos={ sortTodosAction }
-        />
+        <RouteRenderer {...route} key={route.path} />
     ))
 
     function getCompletedState(todos) {
@@ -116,30 +121,32 @@ export default function TodoApp() {
     }
 
   return (
-      <Router>
-        <nav className="App-nav">
-            <img className="App-logo" src={logo} alt="React Logo" width={75}/>
-            <div className="nav-links-container">
+      <TodosStateContext.Provider value={ todosStateApi }>
+          <Router>
+              <nav className="App-nav">
+                  <img className="App-logo" src={logo} alt="React Logo" width={75}/>
+                  <div className="nav-links-container">
                 <span>
                     <Link to="/todos" className="App-link">Todos</Link>
                 </span>
-                <span>
+                      <span>
                     <Link to="/completed-todos" className="App-link">Completed Todos</Link>
                 </span>
-            </div>
+                  </div>
 
-        </nav>
-          {/*
+              </nav>
+              {/*
           A <Switch> looks through all its children <Route>
           elements and renders the first one whose path
           matches the current URL. Use a <Switch> any time
           you have multiple routes, but you want only one
           of them to render at a time
         */}
-          <Switch>
-              { routesRendererMap }
-          </Switch>
-      </Router>
+              <Switch>
+                  { routesRendererMap }
+              </Switch>
+          </Router>
+      </TodosStateContext.Provider>
   );
 }
 

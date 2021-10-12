@@ -48,7 +48,7 @@ const updateTodosDatabase = async (todos) => {
         await promiseTimer(350)
         localStorage.setItem('todosRecord', JSON.stringify(todos))
 
-        return Promise.resolve({ status: '200', data: todos})
+        return Promise.resolve({ status: '200', data: todos })
     } catch (err) {
         return Promise.reject({ status: '500', data: err })
     }

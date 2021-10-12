@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import TodosList from '../components/TodosList'
+import { TodosStateContext } from '../App'
 
 export default function TodosPage(props) {
+    const todosStateApi = useContext(TodosStateContext)
+
     const [search, setSearch] = useState('')
 
     const handleInput = ({ target }) => {
@@ -18,18 +21,18 @@ export default function TodosPage(props) {
     }
 
     const addTodo = () => {
-        const newTodos = [...props.todos]
+        const newTodos = [...todosStateApi.todos]
         if (search) {
             newTodos.push({ id: Math.random(), text: search, completed: false })
         }
 
-        props.updateTodos(newTodos)
+        todosStateApi.updateTodos(newTodos)
         setSearch('')
     }
 
     const squareNumbers = () => {
         const regex = /\d+/g
-        const newTodos = props.todos.map(todo => {
+        const newTodos = todosStateApi.todos.map(todo => {
             const numbers = todo.text.match(regex)
             if (numbers) {
                 todo.text = squareAction(numbers, todo.text)
@@ -37,20 +40,20 @@ export default function TodosPage(props) {
             return todo
         })
 
-        props.updateTodos(newTodos)
+        todosStateApi.updateTodos(newTodos)
     }
 
     return (
-        <div className="todos-page" style={{ fontSize: `${props.fontSize}rem` }}>
+        <div className="todos-page" style={{ fontSize: `${todosStateApi.fontSize}rem` }}>
             <h2>Todos</h2>
             <input className="search" type="text" placeholder="Search..." value={search} onChange={handleInput}/>
-            <TodosList todos={props.todos} completedState={props.completedState} handleTodoCompletion={props.handleTodoCompletion} />
+            <TodosList todos={todosStateApi.todos} />
             <div className="action-btns-container">
                 <button onClick={addTodo}>Add</button>
-                <button onClick={props.sortTodos}>Sort</button>
+                <button onClick={todosStateApi.sortTodos}>Sort</button>
                 <button onClick={squareNumbers}>^2 Numbers</button>
-                <button onClick={() => props.changeFontByType('increment')}>Increase Font</button>
-                <button onClick={() => props.changeFontByType('reset')}>Reset Font</button>
+                <button onClick={() => todosStateApi.changeFontByType('increment')}>Increase Font</button>
+                <button onClick={() => todosStateApi.changeFontByType('reset')}>Reset Font</button>
             </div>
         </div>
     );
