@@ -1,54 +1,37 @@
 import logo from './logo.svg';
 import './App.css';
 
-import React, {useState, useEffect, createContext, useContext } from "react";
+import React, { useEffect, createContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
   Link
 } from "react-router-dom";
 
-import TodosPage from './pages/TodosPage'
-import CompletedTodosPage from './pages/CompletedTodosPage'
+import { routesRendererMap } from "./router/routeConfig";
+import useStateManager from "./hooks/stateManagerHook";
 
 import { mockFetch } from "../../shared/todosApi";
+import { lowerAndCamelCase } from "../../shared/string-utils";
 
 export const TodosStateContext = createContext({})
 
-const routes = [
-    {
-        path: "/todos",
-        component: TodosPage,
-    },
-    {
-        path: "/completed-todos",
-        component: CompletedTodosPage,
-    }
-]
-
-function RouteRenderer (route) {
-    return (
-        <Route
-            path={route.path}
-            render={props => (
-                // pass the sub-routes down to keep nesting
-                <route.component {...props}  />
-            )}
-        />
-    )
-}
-
 export default function TodoApp() {
-    const [todosList, setTodosList] = useState([])
-    const [fontSize, setFontSize] = useState(1)
-    const [completedState, setCompletedState] = useState([])
-    const todosStateApi = {
-        todos: todosList,
-        fontSize,
-        completedState,
+    const { internalState, state, updateState: updateTodosState } = useStateManager({
+        todos: [],
+        fontSize: 1,
+        completedState: []
+    })
+
+    const todosContextApi = {
+        internalTodosRecord: internalState.todos,
+        todos: state.todos,
+        fontSize: state.fontSize,
+        completedState: state.completedState,
         handleTodoCompletion,
+        handleFuzzySearch,
         changeFontByType,
+        resetTodos,
         updateTodos: updateTodosAction,
         sortTodos: sortTodosAction
     }
@@ -57,18 +40,20 @@ export default function TodoApp() {
          fetchTodos()
     },[])
 
-    const routesRendererMap = routes.map(route => (
-        <RouteRenderer {...route} key={route.path} />
-    ))
-
     function getCompletedState(todos) {
         return todos.map(todo => todo.completed);
     }
 
     function handleApiResponse(response) {
         if (response.status === '200') {
-            setTodosList(response.data)
-            setCompletedState(getCompletedState(response.data))
+            const updateObject = {
+                updatedState: {
+                    ...internalState,
+                    todos: response.data,
+                    completedState: getCompletedState(response.data)
+                }
+            }
+            updateTodosState(updateObject)
         } else {
             console.error(response.data)
         }
@@ -76,30 +61,38 @@ export default function TodoApp() {
 
     async function fetchTodos() {
         const response = await mockFetch('localhost:3000/getTodos')
-        handleApiResponse(response);
+        handleApiResponse(response)
     }
 
     async function updateTodosAction(todos) {
         const newTodos = [...todos]
-        const response = await mockFetch('localhost:3000/updateTodos', { todos: newTodos });
+        const response = await mockFetch('localhost:3000/updateTodos', {
+            method: 'POST', body: { todos: newTodos }
+        });
 
         handleApiResponse(response)
     }
 
      async function handleTodoCompletion(checkedIndex) {
-        const newTodos = todosList.map((todo, index) => {
-            if (checkedIndex === index) {
-                todo.completed = !todo.completed
-            }
-
-            return todo
-        })
+        const newTodos = [...internalState.todos]
+        newTodos[checkedIndex].completed = !newTodos[checkedIndex].completed
 
         await updateTodosAction(newTodos)
     }
 
+    function resetTodos() {
+        updateTodosState({ updatedState: [...internalState.todos], stateProperty: 'todos'}, false)
+    }
+
+    function handleFuzzySearch(search) {
+        const textSearch = lowerAndCamelCase(search)
+        const newTodos = internalState.todos.filter(todo => lowerAndCamelCase(todo.text).includes(textSearch))
+
+        updateTodosState({ updatedState: newTodos, stateProperty: 'todos' }, false)
+    }
+
     function sortTodosAction() {
-        const newTodos = [...todosList].sort((a, b) => {
+        const newTodos = [...state.todos].sort((a, b) => {
             const textA = a.text.toLowerCase()
             const textB = b.text.toLowerCase()
 
@@ -113,15 +106,16 @@ export default function TodoApp() {
             return 0;
         })
 
-        setTodosList(newTodos)
+        updateTodosState({ updatedState: newTodos, stateProperty: 'todos' }, false)
     }
 
     function changeFontByType(type) {
-        type && type === 'increment' ? setFontSize(fontSize + 1) : setFontSize(1)
+        let newFontSize = type && type === 'increment' ? state.fontSize + 1 : 1
+        updateTodosState({ updatedState: newFontSize, stateProperty: 'fontSize' })
     }
 
   return (
-      <TodosStateContext.Provider value={ todosStateApi }>
+      <TodosStateContext.Provider value={ todosContextApi }>
           <Router>
               <nav className="App-nav">
                   <img className="App-logo" src={logo} alt="React Logo" width={75}/>

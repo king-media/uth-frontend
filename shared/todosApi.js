@@ -81,10 +81,10 @@ const apiHandlerStrategy = {
 
 // Mock Client Fetch
 
-export async function mockFetch(url, body) {
+export async function mockFetch(url, req) {
     if (!url) {
         return Promise.reject({ status: '400', data: 'Route must be specified' })
     }
 
-    return await apiHandlerStrategy[url].executeRoute(null, { body })
+    return await apiHandlerStrategy[url].executeRoute(null, req)
 }
