@@ -1,15 +1,15 @@
 import React, {useContext, useEffect, useState} from 'react'
 import TodosList from '../components/TodosList'
-import { TodosStateContext } from "../App";
+import { TodosStateContext } from "../state";
 
 export default function CompletedTodosPage(props) {
-    const todosStateApi = useContext(TodosStateContext)
+    const todosContextApi = useContext(TodosStateContext)
 
     const [search, setSearch] = useState('')
-    const completedTodos = todosStateApi.internalTodosRecord.filter(todo => todo.completed);
+    const completedTodos = todosContextApi.internalTodosRecord.filter(todo => todo.completed);
 
     useEffect(() => {
-        todosStateApi.resetTodos()
+        todosContextApi.resetTodos()
     },[])
 
     const handleInput = ({ target }) => {
@@ -17,7 +17,7 @@ export default function CompletedTodosPage(props) {
     }
 
     return (
-        <div className="todos-page" style={{ fontSize: `${todosStateApi.fontSize}rem` }}>
+        <div className="todos-page" style={{ fontSize: `${todosContextApi.fontSize}rem` }}>
             <h2>Completed Todos</h2>
             <input className="search" type="text" placeholder="Search..." value={search} onChange={ handleInput }/>
             <TodosList todos={completedTodos} />
