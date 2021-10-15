@@ -2,7 +2,7 @@ import _delay from 'lodash/delay'
 
 /* Mock Server / Database logic */
 
-const rawTodoList = [
+export const rawTodoList = [
     {
         id: Math.random(),
         text: 'Finish UTH series',
@@ -66,7 +66,7 @@ class ApiHandler {
             case '/getTodos':
                 return await getTodosFromDatabase()
             case '/updateTodos':
-                return await updateTodosDatabase(req.body.todos)
+                return await updateTodosDatabase(req.body)
             default:
                 return Promise.reject({ status: '400', data: 'Not a route handler' })
         }

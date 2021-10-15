@@ -8,7 +8,7 @@ import {
   Link
 } from "react-router-dom";
 
-import { routesRendererMap } from "./router/routeConfig";
+import { routesRendererMap, HomeRedirect } from "./router/routeConfig";
 
 import { TodoStateProvider } from "./state";
 
@@ -30,6 +30,7 @@ export default function TodoApp() {
               </nav>
               <Switch>
                   { routesRendererMap }
+                  <HomeRedirect />
               </Switch>
           </Router>
       </TodoStateProvider>

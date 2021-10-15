@@ -62,7 +62,7 @@ export const TodoStateProvider = props => {
         const newTodos = [...todos]
         const response = await mockFetch('localhost:3000/updateTodos', {
             method: 'POST',
-            body: { todos: newTodos }
+            body: newTodos
         });
 
         handleApiResponse(response)

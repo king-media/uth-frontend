@@ -1,6 +1,6 @@
 import TodosPage from "../pages/TodosPage";
 import CompletedTodosPage from "../pages/CompletedTodosPage";
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import React from "react";
 
 const routes = [
@@ -29,3 +29,14 @@ function RouteRenderer (route) {
 export const routesRendererMap = routes.map(route => (
     <RouteRenderer {...route} key={route.path} />
 ))
+
+export function HomeRedirect() {
+  return (
+     <Route
+        path="/"
+        render={props => (
+            <Redirect to="/todos" {...props} />
+        )}
+     />
+  )
+}
