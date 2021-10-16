@@ -42,8 +42,8 @@ node_modules/
 jspm_packages/
 
 # IDEs & Editors
- .idea/
- .vscode/
+.idea/
+.vscode/
 
 # TypeScript v1 declaration files
 typings/
