@@ -28,9 +28,9 @@ export const TodoStateProvider = props => {
         sortTodos: sortTodosAction
     }
 
-    useEffect( () => {
+    useEffect(() => {
         fetchTodos()
-    },[])
+    }, [])
 
     // API & State Actions
     function getCompletedState(todos) {
@@ -76,7 +76,7 @@ export const TodoStateProvider = props => {
     }
 
     function resetTodos() {
-        updateTodosState({ updatedState: [...internalState.todos], stateProperty: 'todos'}, false)
+        updateTodosState({ updatedState: [...internalState.todos], stateProperty: 'todos' }, false)
     }
 
     function handleFuzzySearch(search) {
@@ -109,9 +109,9 @@ export const TodoStateProvider = props => {
         updateTodosState({ updatedState: newFontSize, stateProperty: 'fontSize' })
     }
 
- return (
-     <TodosStateContext.Provider value={ todosContextApi }>
-         { props.children }
-     </TodosStateContext.Provider>
- )
+    return (
+        <TodosStateContext.Provider value={todosContextApi}>
+            {props.children}
+        </TodosStateContext.Provider>
+    )
 }
