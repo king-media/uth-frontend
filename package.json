@@ -7,8 +7,14 @@
   "author": "",
   "license": "ISC",
   "scripts": {
+    "install:projects": "sh install-project.sh",
     "test": "jest",
-    "run-server": "node ../uth-server/index.js"
+    "run-server": "node ../uth-server/index.js",
+    "start:react": "yarn --cwd app-packages/react-app start",
+    "start:vue": "yarn --cwd app-packages/vue-app start",
+    "start:angular": "yarn --cwd app-packages/angular-app start",
+    "start:svelte": "yarn --cwd app-packages/svelte-app start",
+    "start:solid": "yarn --cwd app-packages/solid-app start"
   },
   "dependencies": {
     "jest": "^27.2.5",

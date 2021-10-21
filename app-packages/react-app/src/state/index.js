@@ -1,7 +1,7 @@
 import { createContext, useEffect } from "react";
 import useStateManager from "../hooks/stateManagerHook";
-import { mockFetch } from "../../../shared/todosApi";
-import { lowerAndCamelCase } from "../../../shared/string-utils";
+import { mockFetch } from "../../../../shared/todosApi";
+import { lowerAndCamelCase } from "../../../../shared/string-utils";
 
 const initialState = {
     todos: [],
