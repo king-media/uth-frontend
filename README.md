@@ -5,16 +5,17 @@ The series is about reviewing all Javascript Frameworks/Libraries. Each app will
 Once the series is complete, I will link my framework's repo/source code here. 
 The goal of this series is to learn, grow and develop my own framework. 
 I appreciate any support and contribution. 
+
 Thanks! I hope you enjoy the series.
 ------
 ### Frameworks & Technologies
-- ###[React](https://reactjs.org/)
+- ### [React](https://reactjs.org/)
   
     **"A JavaScript library for building user interfaces"** ~ React.org
 
     With a large community and backing React is a great option to build flexible & scalable interactive UI.
 ---
-- ###[Vue](https://vuejs.org/)
+- ### [Vue](https://vuejs.org/)
   
     **"The progressive JavaScript Framework"** ~ Vue.org
 
@@ -22,7 +23,7 @@ Thanks! I hope you enjoy the series.
     Vue has been and continues to gain plenty of steam as a top option for building interactive UIs.
   
 ---
-- ###[Angular](https://angular.io/)
+- ### [Angular](https://angular.io/)
   
     **"One framework. Mobile and desktop."** ~ Angular.io
 
@@ -30,7 +31,7 @@ Thanks! I hope you enjoy the series.
     Angular, built for large scale in mind very opinionated but with that comes a stable framework that holds up to any challenge.
   
 --- 
-- ###[Svelte](https://svelte.dev)
+- ### [Svelte](https://svelte.dev)
   
     **"Cybernetically enhanced web apps"** ~ Svelte.dev
   
@@ -39,7 +40,7 @@ Thanks! I hope you enjoy the series.
     It's difference in philosophy and implementation draws attention especially but that attention is backed by great, effective results.
   
 ---
-- ###[Solid.js]()
+- ### [Solid.js]()
 
     **"A declarative, efficient and flexible JavaScript library for building user interfaces." ~ Solidjs.com**
 
