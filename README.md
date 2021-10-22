@@ -78,7 +78,7 @@ $ yarn install
 You can navigate to an individual project and run ``yarn start`` in order to spin up the application.
 Or you can from the root directory **(uth-frontend)** easily run 
 
-`yarn start:[framework]-app`.
+`yarn start:[framework]`.
 
 Where **[framework]** would be replaced with the name of the Framework/Library you wish to view.
 
