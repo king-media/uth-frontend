@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Vue logo" src="./assets/logo.png">
     <router-link to="/todos">Todos</router-link> |
     <router-link to="/completed-todos">Completed Todos</router-link>
   </div>
