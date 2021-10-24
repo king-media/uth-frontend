@@ -5,16 +5,17 @@ The series is about reviewing all Javascript Frameworks/Libraries. Each app will
 Once the series is complete, I will link my framework's repo/source code here. 
 The goal of this series is to learn, grow and develop my own framework. 
 I appreciate any support and contribution. 
+
 Thanks! I hope you enjoy the series.
 ------
 ### Frameworks & Technologies
-- ###[React](https://reactjs.org/)
+- ### [React](https://reactjs.org/)
   
     **"A JavaScript library for building user interfaces"** ~ React.org
 
     With a large community and backing React is a great option to build flexible & scalable interactive UI.
 ---
-- ###[Vue](https://vuejs.org/)
+- ### [Vue](https://vuejs.org/)
   
     **"The progressive JavaScript Framework"** ~ Vue.org
 
@@ -22,7 +23,7 @@ Thanks! I hope you enjoy the series.
     Vue has been and continues to gain plenty of steam as a top option for building interactive UIs.
   
 ---
-- ###[Angular](https://angular.io/)
+- ### [Angular](https://angular.io/)
   
     **"One framework. Mobile and desktop."** ~ Angular.io
 
@@ -30,7 +31,7 @@ Thanks! I hope you enjoy the series.
     Angular, built for large scale in mind very opinionated but with that comes a stable framework that holds up to any challenge.
   
 --- 
-- ###[Svelte](https://svelte.dev)
+- ### [Svelte](https://svelte.dev)
   
     **"Cybernetically enhanced web apps"** ~ Svelte.dev
   
@@ -39,7 +40,7 @@ Thanks! I hope you enjoy the series.
     It's difference in philosophy and implementation draws attention especially but that attention is backed by great, effective results.
   
 ---
-- ###[Solid.js]()
+- ### [Solid.js]()
 
     **"A declarative, efficient and flexible JavaScript library for building user interfaces." ~ Solidjs.com**
 
@@ -53,7 +54,7 @@ Thanks! I hope you enjoy the series.
 
 ## Installation
 
-You will need npm & yarn in order to run all applications. Fork the repo and navigate to the root of the project **(uth-frontend)**.
+You will need [Node.js](https://nodejs.org/) **16+** & yarn in order to run all applications. Fork the repo and navigate to the root of the project **(uth-frontend)**.
 
 Run the followings to install all necessary packages for all Apps.
 
@@ -77,7 +78,7 @@ $ yarn install
 You can navigate to an individual project and run ``yarn start`` in order to spin up the application.
 Or you can from the root directory **(uth-frontend)** easily run 
 
-`yarn start:[framework]-app`.
+`yarn start:[framework]`.
 
 Where **[framework]** would be replaced with the name of the Framework/Library you wish to view.
 
@@ -123,4 +124,35 @@ These reoccurring folders will be in each app package.
 ## Issues
 
 
+The main branch is just a snapshot of the latest stable release. All development should be done in dedicated branches based off of the working branch (Dev). 
+Do not submit PRs against the main branch. Those will be ignored/closed.
+
+**Checkout dev branch, and merge back against that branch**.
+
+Work in the src folder and DO NOT checkin dist or public in the commits.
+
+It's OK to have multiple small commits as you work on the PR - GitHub will automatically squash it before merging.
+
+Make sure npm test passes. (see Getting Started section)
+
+If adding a new feature:
+
+Add accompanying test case.
+Provide a convincing reason to add this feature. Explain the feature & implementation details. Ideally, you should open an **enhancement/feature** issue first and have it approved before working on it.
+If fixing bug:
+
+If you are resolving a special issue, add (fix #xxxx[,#xxxx]) (#xxxx is the issue id) in your PR title for a better release log, e.g. fixed useEffect bug (fix #2021).
+Provide a detailed description of the bug in the PR. Live demo preferred. These issues must be taged with **Bug** or **Fix**.
+Add appropriate test coverage if applicable.
+
+------
+
 ## Resources
+
+----
+
+## License
+
+[MIT](https://opensource.org/licenses/MIT)
+
+Copyright (c) 2021-present, ReKara LLC
