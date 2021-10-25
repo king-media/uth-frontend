@@ -17,6 +17,8 @@
     "start:solid": "yarn --cwd app-packages/solid-app start"
   },
   "dependencies": {
+    "@babel/eslint-parser": "^7.15.8",
+    "eslint": "^8.1.0",
     "jest": "^27.2.5",
     "lodash": "^4.17.21"
   },

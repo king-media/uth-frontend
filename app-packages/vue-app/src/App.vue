@@ -1,31 +1,36 @@
 <template>
-  <div id="nav">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <router-link to="/todos">Todos</router-link> |
-    <router-link to="/completed-todos">Completed Todos</router-link>
+  <div class="App-nav">
+    <img class="App-logo" alt="Vue logo" src="./assets/logo.png">
+    <h2>ue</h2>
+    <div class="nav-links-container">
+      <router-link class="App-link" to="/todos">Todos</router-link>
+      <router-link class="App-link" to="/completed-todos">Completed Todos</router-link>
+    </div>
   </div>
   <router-view/>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { onMounted, provide, readonly } from "vue";
+import { todoState, stateApi } from "./state";
 
-#nav {
-  padding: 30px;
-}
+  export default {
+    setup() {
+      provide('todoState', readonly(todoState))
+      provide('stateApi', readonly(stateApi))
+
+      onMounted(() => {
+        stateApi.fetchTodos()
+      })
+    }
+  }
+</script>
+
+<style>
 
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>

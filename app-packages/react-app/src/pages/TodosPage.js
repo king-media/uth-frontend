@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import TodosList from '../components/TodosList'
 import { TodosStateContext } from '../state'
 
@@ -14,15 +14,6 @@ export default function TodosPage(props) {
         fuzzySearch(target.value)
     }
 
-    const squareAction = (numberSet, text) => {
-        const squaredSet = numberSet.map(num => num ** 2)
-        squaredSet.forEach((num, i) => {
-            text = text.replace(numberSet[i], num)
-        })
-
-        return text
-    }
-
     const addTodo = () => {
         const newTodos = [...todosContextApi.internalTodosRecord]
         if (search) {
@@ -33,12 +24,22 @@ export default function TodosPage(props) {
         setSearch('')
     }
 
+
+    const squareNumsInText = (numberSet, text) => {
+        const squaredSet = numberSet.map(num => num ** 2)
+        squaredSet.forEach((num, i) => {
+            text = text.replace(numberSet[i], num)
+        })
+
+        return text
+    }
+
     const squareNumbers = () => {
         const regex = /\d+/g
         const newTodos = todosContextApi.internalTodosRecord.map(todo => {
             const numbers = todo.text.match(regex)
             if (numbers) {
-                todo.text = squareAction(numbers, todo.text)
+                todo.text = squareNumsInText(numbers, todo.text)
             }
             return todo
         })

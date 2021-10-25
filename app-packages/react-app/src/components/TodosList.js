@@ -5,13 +5,13 @@ export default function TodosListComponent(props) {
     const todosStateApi = useContext(TodosStateContext)
 
     const todosMapper = props.todos.map(todo => {
-        const fieldName = todo.text.replace(' ', '')
-        const trueIndex = todosStateApi.internalTodosRecord.findIndex(internalTodo => internalTodo.text === todo.text)
+        const fieldName = todo.text.replace(/\s/g, '')
+        const trueIndex = todosStateApi.internalTodosRecord.findIndex(internalTodo => internalTodo.id === todo.id)
 
         return (
             <div key={todo.id}>
                 <input type="checkbox" onChange={() => todosStateApi.handleTodoCompletion(trueIndex) } name={fieldName}
-                       checked={todosStateApi.completedState[trueIndex] || false}
+                       checked={todo.completed || false}
                 />
                 <label className={todo.completed ? 'completed-todo' : undefined} htmlFor={fieldName}>
                     { todo.text }

@@ -19,14 +19,13 @@ export default function TodoApp() {
               <nav className="App-nav">
                   <img className="App-logo" src={logo} alt="React Logo" width={75}/>
                   <div className="nav-links-container">
-                <span>
-                    <Link to="/todos" className="App-link">Todos</Link>
-                </span>
-                      <span>
-                    <Link to="/completed-todos" className="App-link">Completed Todos</Link>
-                </span>
+                    <span>
+                        <Link to="/todos" className="App-link">Todos</Link>
+                    </span>
+                    <span>
+                        <Link to="/completed-todos" className="App-link">Completed Todos</Link>
+                    </span>
                   </div>
-
               </nav>
               <Switch>
                   { routesRendererMap }
