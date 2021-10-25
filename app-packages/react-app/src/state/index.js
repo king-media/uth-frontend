@@ -1,13 +1,8 @@
-import { createContext, useEffect } from "react";
+import {createContext, useEffect} from "react";
 import useStateManager from "../hooks/stateManagerHook";
 import { mockFetch } from "../../../../shared/todosApi";
 import { lowerAndCamelCase } from "../../../../shared/string-utils";
-
-const initialState = {
-    todos: [],
-    fontSize: 1,
-    completedState: []
-}
+import { initialState } from "../../../../shared/initialState";
 
 export const TodosStateContext = createContext({})
 
@@ -18,7 +13,6 @@ export const TodoStateProvider = props => {
         internalTodosRecord: internalState.todos,
         todos: state.todos,
         fontSize: state.fontSize,
-        completedState: state.completedState,
         updateTodosState,
         handleTodoCompletion,
         handleFuzzySearch,
@@ -33,9 +27,6 @@ export const TodoStateProvider = props => {
     }, [])
 
     // API & State Actions
-    function getCompletedState(todos) {
-        return todos.map(todo => todo.completed);
-    }
 
     function handleApiResponse(response) {
         if (response.status === '200') {
@@ -43,7 +34,6 @@ export const TodoStateProvider = props => {
                 updatedState: {
                     ...internalState,
                     todos: response.data,
-                    completedState: getCompletedState(response.data)
                 }
             }
 
@@ -87,7 +77,7 @@ export const TodoStateProvider = props => {
     }
 
     function sortTodosAction() {
-        const newTodos = [...state.todos].sort((a, b) => {
+        const newTodos = [...internalState.todos].sort((a, b) => {
             const textA = a.text.toLowerCase()
             const textB = b.text.toLowerCase()
 

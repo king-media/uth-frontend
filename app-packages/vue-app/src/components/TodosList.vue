@@ -1,19 +1,37 @@
 <template>
   <div class="todos-container">
-    <div>
-      <input type="checkbox">
-      <label class="dynamic" htmlFor="checkbox">
-        Todo Text
+    <div v-for="todo in todos" :key="todo.id">
+      <input type="checkbox" v-model="todo.completed" :name="getFieldName(todo)" @input="saveCompletion(todo)">
+      <label :class="todo.completed ? 'completed-todo' : undefined" :for="getFieldName(todo)">
+        {{ todo.text }}
       </label>
     </div>
   </div>
 </template>
 
 <script>
+
+import { inject } from "vue";
+
 export default {
   name: 'TodosList',
   props: {
     todos: Array
+  },
+  setup() {
+    const todoState = inject('todoState')
+    const stateApi = inject('stateApi')
+
+    return { todoState, stateApi }
+  },
+  methods: {
+    getFieldName(todo) {
+      return todo.text.replace(/\s/g, '')
+    },
+    saveCompletion(todo) {
+      const trueIndex = this.todoState.todos.findIndex(internalTodo => internalTodo.id === todo.id)
+      this.stateApi.handleTodoCompletion(trueIndex)
+    }
   }
 }
 </script>
