@@ -1,26 +1,22 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useContext } from 'react'
 import TodosList from '../components/TodosList'
 import { TodosStateContext } from "../state";
+import { lowerAndCamelCase } from "../../../../../uth-frontend/shared/string-utils";
+import { useSearch } from "../hooks/useSearch";
 
-export default function CompletedTodosPage(props) {
+export default function CompletedTodosPage() {
     const todosContextApi = useContext(TodosStateContext)
+    const { search, internalState: internalTodos, handleInput } = useSearch(todosContextApi.todos, handleFuzzySearch)
 
-    const [search, setSearch] = useState('')
-    const completedTodos = todosContextApi.internalTodosRecord.filter(todo => todo.completed);
-
-    useEffect(() => {
-        todosContextApi.resetTodos()
-    },[])
-
-    const handleInput = ({ target }) => {
-        setSearch(target.value);
+    function handleFuzzySearch(todo, filterBy) {
+        return lowerAndCamelCase(todo.text).includes(lowerAndCamelCase(filterBy)) && todo.completed
     }
 
     return (
         <div className="todos-page" style={{ fontSize: `${todosContextApi.fontSize}rem` }}>
             <h2>Completed Todos</h2>
             <input className="search" type="text" placeholder="Search..." value={search} onChange={ handleInput }/>
-            <TodosList todos={completedTodos} />
+            <TodosList todos={ internalTodos } />
         </div>
     );
 }

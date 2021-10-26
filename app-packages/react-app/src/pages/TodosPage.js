@@ -1,27 +1,26 @@
-import React, {useState, useContext, useEffect} from 'react'
+import React, { useContext } from 'react'
 import TodosList from '../components/TodosList'
 import { TodosStateContext } from '../state'
 
-import _debounce from 'lodash/debounce'
+import { lowerAndCamelCase } from "../../../../shared/string-utils";
+import { useSearch } from "../hooks/useSearch";
 
 export default function TodosPage(props) {
     const todosContextApi = useContext(TodosStateContext)
-    const fuzzySearch =  _debounce(todosContextApi.handleFuzzySearch, 500)
-    const [search, setSearch] = useState('')
+    const { search, internalState: internalTodos, handleInput, clearSearch } = useSearch(todosContextApi.todos, handleFuzzySearch)
 
-    const handleInput = ({ target }) => {
-        setSearch(target.value);
-        fuzzySearch(target.value)
+    function handleFuzzySearch(todo, filterBy) {
+        return lowerAndCamelCase(todo.text).includes(lowerAndCamelCase(filterBy))
     }
 
     const addTodo = () => {
-        const newTodos = [...todosContextApi.internalTodosRecord]
+        const newTodos = [...todosContextApi.todos]
         if (search) {
             newTodos.push({ id: Math.random(), text: search, completed: false })
         }
 
         todosContextApi.updateTodos(newTodos)
-        setSearch('')
+        clearSearch()
     }
 
 
@@ -36,8 +35,9 @@ export default function TodosPage(props) {
 
     const squareNumbers = () => {
         const regex = /\d+/g
-        const newTodos = todosContextApi.internalTodosRecord.map(todo => {
+        const newTodos = todosContextApi.todos.map(todo => {
             const numbers = todo.text.match(regex)
+
             if (numbers) {
                 todo.text = squareNumsInText(numbers, todo.text)
             }
@@ -51,7 +51,7 @@ export default function TodosPage(props) {
         <div className="todos-page" style={{ fontSize: `${todosContextApi.fontSize}rem` }}>
             <h2>Todos</h2>
             <input className="search" type="text" placeholder="Search..." value={ search } onChange={ handleInput }/>
-            <TodosList todos={ todosContextApi.todos } />
+            <TodosList todos={ internalTodos } />
             <div className="action-btns-container">
                 <button onClick={addTodo}>Add</button>
                 <button onClick={todosContextApi.sortTodos}>Sort</button>

@@ -1,23 +1,17 @@
-import {createContext, useEffect} from "react";
-import useStateManager from "../hooks/stateManagerHook";
+import { createContext, useEffect, useState } from "react";
 import { mockFetch } from "../../../../shared/todosApi";
-import { lowerAndCamelCase } from "../../../../shared/string-utils";
 import { initialState } from "../../../../shared/initialState";
 
 export const TodosStateContext = createContext({})
 
 export const TodoStateProvider = props => {
-    const { internalState, state, updateState: updateTodosState } = useStateManager(initialState)
+    const [state, setState] = useState(initialState)
 
     const todosContextApi = {
-        internalTodosRecord: internalState.todos,
         todos: state.todos,
         fontSize: state.fontSize,
-        updateTodosState,
         handleTodoCompletion,
-        handleFuzzySearch,
         changeFontByType,
-        resetTodos,
         updateTodos: updateTodosAction,
         sortTodos: sortTodosAction
     }
@@ -30,14 +24,8 @@ export const TodoStateProvider = props => {
 
     function handleApiResponse(response) {
         if (response.status === '200') {
-            const updateObject = {
-                updatedState: {
-                    ...internalState,
-                    todos: response.data,
-                }
-            }
-
-            updateTodosState(updateObject)
+            const updateObject = { ...state, todos: response.data }
+            setState(updateObject)
         } else {
             console.error(response.data)
         }
@@ -59,25 +47,14 @@ export const TodoStateProvider = props => {
     }
 
     async function handleTodoCompletion(checkedIndex) {
-        const newTodos = [...internalState.todos]
+        const newTodos = [...state.todos]
         newTodos[checkedIndex].completed = !newTodos[checkedIndex].completed
 
         await updateTodosAction(newTodos)
     }
 
-    function resetTodos() {
-        updateTodosState({ updatedState: [...internalState.todos], stateProperty: 'todos' }, false)
-    }
-
-    function handleFuzzySearch(search) {
-        const textSearch = lowerAndCamelCase(search)
-        const newTodos = internalState.todos.filter(todo => lowerAndCamelCase(todo.text).includes(textSearch))
-
-        updateTodosState({ updatedState: newTodos, stateProperty: 'todos' }, false)
-    }
-
     function sortTodosAction() {
-        const newTodos = [...internalState.todos].sort((a, b) => {
+        const newTodos = [...state.todos].sort((a, b) => {
             const textA = a.text.toLowerCase()
             const textB = b.text.toLowerCase()
 
@@ -91,12 +68,12 @@ export const TodoStateProvider = props => {
             return 0;
         })
 
-        updateTodosState({ updatedState: newTodos, stateProperty: 'todos' }, false)
+        setState({ ...state,  todos: newTodos })
     }
 
     function changeFontByType(type) {
         let newFontSize = type && type === 'increment' ? state.fontSize + 1 : 1
-        updateTodosState({ updatedState: newFontSize, stateProperty: 'fontSize' })
+        setState({ ...state,  fontSize: newFontSize })
     }
 
     return (

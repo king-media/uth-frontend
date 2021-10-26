@@ -6,7 +6,7 @@ export default function TodosListComponent(props) {
 
     const todosMapper = props.todos.map(todo => {
         const fieldName = todo.text.replace(/\s/g, '')
-        const trueIndex = todosStateApi.internalTodosRecord.findIndex(internalTodo => internalTodo.id === todo.id)
+        const trueIndex = todosStateApi.todos.findIndex(internalTodo => internalTodo.id === todo.id)
 
         return (
             <div key={todo.id}>
